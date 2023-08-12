@@ -7,12 +7,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 @SpringBootApplication
 @RestController
@@ -55,7 +51,9 @@ public class DemoApplication {
         } catch (IOException e) {
             return "Ошибка при чтении файла";
         }
-    } @GetMapping("/delete")
+    }
+
+    @GetMapping("/delete")
     public String delete(@RequestParam(value = "name") int name) throws IOException {
         try {
 
@@ -89,59 +87,56 @@ public class DemoApplication {
             throw new RuntimeException(e);
         }
     }
+
     @GetMapping("/displ")
     public String disp(@RequestParam(value = "line") int line) throws IOException {
+
+        File file = new File("путь_к_файлу.txt");
+        File tempFile = new File("temp.txt");
+
+
+        List<String> lines = new ArrayList<>();
+        FileReader reader = new FileReader(file);
+        BufferedReader bufferedReader = new BufferedReader(reader);
+
+        String line1;
+        while ((line1 = bufferedReader.readLine()) != null) {
+            lines.add(line1);
+        }
+
+        FileWriter writer = new FileWriter(file);
+        BufferedWriter bufferedWriter = new BufferedWriter(writer);
+
+        for (String line2 : lines) {
+            bufferedWriter.write(line2);
+            bufferedWriter.newLine();
+        }
+
+
+        bufferedWriter.close();
+        writer.close();
+        return lines.get(line);
+    }
+
+    @GetMapping("/display")
+    public String display() {
         try {
-
-            File file = new File("путь_к_файлу.txt");
-            File tempFile = new File("temp.txt");
-
-
-            List<String> lines = new ArrayList<>();
-            FileReader reader = new FileReader(file);
+            FileReader reader = new FileReader("путь_к_файлу.txt");
             BufferedReader bufferedReader = new BufferedReader(reader);
+            StringBuilder stringBuilder = new StringBuilder();
 
-            String line1;
-            while ((line1 = bufferedReader.readLine()) != null) {
-                lines.add(line1);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line).append("<br>");
             }
 
-            FileWriter writer = new FileWriter(file);
-            BufferedWriter bufferedWriter = new BufferedWriter(writer);
-
-            for (String line2 : lines) {
-                bufferedWriter.write(line2);
-                bufferedWriter.newLine();
-            }
-
-
-
-            bufferedWriter.close();
-            writer.close();
-            return lines.get(line);
-        } finally {
-
+            reader.close();
+            return stringBuilder.toString();
+        } catch (IOException e) {
+            return "Ошибка при чтении файла";
         }
     }
-        @GetMapping("/display")
-        public String display () {
-            try {
-                FileReader reader = new FileReader("путь_к_файлу.txt");
-                BufferedReader bufferedReader = new BufferedReader(reader);
-                StringBuilder stringBuilder = new StringBuilder();
-
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(line).append("<br>");
-                }
-
-                reader.close();
-                return stringBuilder.toString();
-            } catch (IOException e) {
-                return "Ошибка при чтении файла";
-            }
-        }
-    }
+}
 
 
 
