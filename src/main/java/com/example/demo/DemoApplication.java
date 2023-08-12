@@ -123,40 +123,6 @@ public class DemoApplication {
 
         }
     }
-
-
-    //@GetMapping("/delete")
-    //public String delete(@RequestParam(value = "name") int name) throws IOException {
-        //    try {
-            //        File file = new File("путь_к_файлу.txt");
-            //        File tempFile = new File("temp.txt");
-            //
-            //
-            //        List<String> lines = new ArrayList<>();
-            //        FileReader reader = new FileReader(file);
-            //        BufferedReader bufferedReader = new BufferedReader(reader);
-            //
-            //        String line;
-            //        while ((line = bufferedReader.readLine()) != null) {
-                //            lines.add(line);
-                //        }
-            //
-            //        FileWriter writer = new FileWriter(file);
-            //        BufferedWriter bufferedWriter = new BufferedWriter(writer);
-            //
-            //        for (String line2 : lines) {
-                //            bufferedWriter.write(line2);
-                //            bufferedWriter.newLine();
-                //        }
-            //
-            //        bufferedWriter.close();
-            //        writer.close();
-            //        return lines.remove(name);
-            //    } finally {
-            //
-            //    }
-        //}
-
         @GetMapping("/display")
         public String display () {
             try {
