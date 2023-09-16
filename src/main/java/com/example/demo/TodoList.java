@@ -5,7 +5,7 @@ public class TodoList {
     private String text;
     private boolean resul;
 
-    public TodoList(int id, String text,boolean resul) {
+    public TodoList(int id, String text) {
         this.id = id;
         this.text = text;
         this.resul = resul;

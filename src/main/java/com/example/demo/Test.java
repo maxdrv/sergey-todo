@@ -22,7 +22,12 @@ public class Test {
             while ((line = reader.readLine()) != null) {
                 TodoList todoList1 = new TodoList(count++, line);
                 todoLists.add(todoList1);
+
             }
+            int lastIndex = count;
+            FileWriter writer2 = new FileWriter("index.txt");
+            writer2.write(String.valueOf(lastIndex));
+            writer2.close();
         }
         TodoList todoList3 = new TodoList(count, name1);
         todoLists.add(todoList3);
@@ -31,6 +36,7 @@ public class Test {
             System.out.println(todoLists.get(i).getId()+" "+todoLists.get(i).getText());
 
         }
+
        // return "Данные успешно записаны в файл" + todoList3;
     }
 

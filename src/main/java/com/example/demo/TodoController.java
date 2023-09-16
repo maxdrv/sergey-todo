@@ -1,6 +1,7 @@
 package com.example.demo;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +18,7 @@ import java.util.List;
 public class TodoController {    @GetMapping("/delete")
     public String delete(@RequestParam(value = "name") int name) throws IOException {
         try {
-
-
-            File file = new File("путь_к_файлу.txt");
+            File file = new File("задачи.txt");
             List<String> lines = new ArrayList<>();
             FileReader reader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(reader);
@@ -48,7 +47,7 @@ public class TodoController {    @GetMapping("/delete")
     @GetMapping("/displLine")
     public String dispLine(@RequestParam(value = "line") int line) throws IOException {
         try {
-            File file = new File("путь_к_файлу.txt");
+            File file = new File("задачи.txt");
             List<String> lines = new ArrayList<>();
             FileReader reader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(reader);
@@ -70,26 +69,59 @@ public class TodoController {    @GetMapping("/delete")
         }
     }
     @GetMapping("/add")
-    public static String add(@RequestParam(value = "name1") String name1) {
+    public static String add(@RequestParam(value = "name1") String name1) throws IOException {
+        List<TodoList> todoLists123 = new ArrayList<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("задачи.txt"))) {
+            String line;
+            int count = 0;
+            while ((line = reader.readLine()) != null) {
+                TodoList todoList = new TodoList(count++, line);
+                todoLists123.add(todoList);
+
+
+            }
+            int lastIndex = count;
+            FileWriter writer = new FileWriter("index.txt");
+            writer.write(String.valueOf(lastIndex));
+            writer.close();
+            System.out.println("Файл с индексом создан.");
+
+        }
+
+        FileWriter writer = new FileWriter("test.json");
+        objectMapper.writeValue(writer, todoLists123);
+        writer.close();
+
+
         try {
-            FileWriter writer = new FileWriter("путь_к_файлу.txt", true);
-            writer.write(name1 + "\n");
+            FileWriter writer3 = new FileWriter("задачи.txt", true);
+            writer3.write(name1 + "\n");
             ArrayList <TodoList> todoLists = new ArrayList<>();
 
             int count = 1;
             boolean resul = false;
-            try (BufferedReader reader = new BufferedReader(new FileReader("путь_к_файлу.txt"))) {
-                TodoList todoList = new TodoList(0,name1,resul);
+            try (BufferedReader reader = new BufferedReader(new FileReader("задачи.txt"))) {
+                TodoList todoList = new TodoList(0,name1);
                 String line;
 
                 while ((line = reader.readLine()) != null) {
-                    TodoList todoList1 = new TodoList(count++,line,resul);
+                    TodoList todoList1 = new TodoList(count++,line);
                     todoLists.add(todoList1);
                 }
             }
-            TodoList todoList3 = new TodoList(count,name1,resul);
+            int lastIndex = count;
+            FileWriter writer2 = new FileWriter("index.txt");
+            writer2.write(String.valueOf(lastIndex));
+            writer2.close();
+            System.out.println("Файл с индексом создан.");
+
+
+            TodoList todoList3 = new TodoList(count,name1);
             todoLists.add(todoList3);
             writer.close();
+
             return "Данные успешно записаны в файл"+todoList3;
         } catch (IOException e) {
             return "Ошибка при записи в файл";
@@ -100,7 +132,7 @@ public class TodoController {    @GetMapping("/delete")
     @GetMapping("/display")
     public String display() {
         try {
-            FileReader reader = new FileReader("путь_к_файлу.txt");
+            FileReader reader = new FileReader("задачи.txt");
             BufferedReader bufferedReader = new BufferedReader(reader);
             StringBuilder stringBuilder = new StringBuilder();
 
